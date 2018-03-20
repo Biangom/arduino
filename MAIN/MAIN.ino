@@ -40,8 +40,9 @@ void loop(){
  
       // 스마트폰으로 문자열 전송
       
-      BTSerial.write(buffer, bufferPosition);
+      //BTSerial.write(buffer, bufferPosition);
       BTSerial.print(one);
+      BTSerial.print("\n");
       bufferPosition = 0;
       _pos = 0;
     }  
