@@ -7,8 +7,8 @@ int bufferPosition; // 버퍼에 데이타를 저장할 때 기록할 위치
 byte _buffer[512]; // 임시 버퍼
 int _pos; // 임시 버퍼 포지션
 
-double one = 36.76633;
-double twp = 127.28124;
+double one = 34.76633;
+double two = 127.28124;
 
 void setup(){
   BTSerial.begin(9600); 
@@ -42,6 +42,8 @@ void loop(){
       
       //BTSerial.write(buffer, bufferPosition);
       BTSerial.print(one);
+      BTSerial.print(",");
+      BTSerial.print(two);
       BTSerial.print("\n");
       bufferPosition = 0;
       _pos = 0;

@@ -1,4 +1,3 @@
- 
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
  
@@ -9,11 +8,12 @@
 #define TXPIN 5
 //Set this value equal to the baud rate of your GPS
 #define GPSBAUD 9600
- 
+
+
 // Create an instance of the TinyGPS object
 TinyGPS gps;
 // Initialize the NewSoftSerial library to the pins you defined above
-SoftwareSerial uart_gps(RXPIN, TXPIN);
+SoftwareSerial uart_gps(RXPIN, TXPIN), BTSerial(2, 3);
  
 // This is where you declare prototypes for the functions that will be 
 // using the TinyGPS library.
@@ -23,14 +23,9 @@ void getgps(TinyGPS &gps);
 // standard hardware serial port (Serial()) to communicate with your 
 // terminal program an another serial port (NewSoftSerial()) for your 
 // GPS.
-
-// -- Add part
-SoftwareSerial BTSerial(2, 3);
-byte buffer[1024]; // 데이터를 수신 받을 버퍼
-int bufferPosition; // 버퍼에 데이타를 저장할 때 기록할 위치
-
 void setup()
 {
+  BTSerial.begin(9600);
   // This is the serial rate for your terminal program. It must be this 
   // fast because we need to print everything before a new sentence 
   // comes in. If you slow it down, the messages might not be valid and 
@@ -43,10 +38,6 @@ void setup()
   Serial.println("GPS Shield QuickStart Example Sketch v12");
   Serial.println("       ...waiting for lock...           ");
   Serial.println("");
-
-  // -- Add part
-  BTSerial.begin(9600);
-  bufferPosition = 0; // 버퍼 위치 초기화
 }
  
 // This is the main loop of the code. All it does is check for data on 
@@ -60,9 +51,14 @@ void loop()
       if(gps.encode(c))      // if there is a new valid sentence...
       {
         getgps(gps);         // then grab the data.
-      }   
+      } 
+      //BTSerial.print(latitude);
+     // BTSerial.print(",");
+      //BTSerial.print(longitude);
+     // BTSerial.print("\n");
+      //delay(1000);
   }
-  //Serial.write('1');
+
 }
  
 // The getgps function will get and print the values we want.
@@ -75,13 +71,18 @@ void getgps(TinyGPS &gps)
   
   // Define the variables that will be used
   float latitude, longitude;
+ 
   // Then call this function
   gps.f_get_position(&latitude, &longitude);
   // You can now print variables latitude and longitude
   Serial.print("Lat/Long: "); 
-  Serial.print(latitude,5); 
+  Serial.print(latitude,5);
+  BTSerial.print(latitude,5);
+  BTSerial.print(",");
   Serial.print(", "); 
   Serial.println(longitude,5);
+  BTSerial.print(longitude,5);
+  BTSerial.print("\n");
   
   // Same goes for date and time
   int year;
@@ -110,9 +111,9 @@ void getgps(TinyGPS &gps)
   gps.stats(&chars, &sentences, &failed_checksum);
   //Serial.print("Failed Checksums: ");Serial.print(failed_checksum);
   //Serial.println(); Serial.println();
+//  BTSerial.print(",");
+//  BTSerial.print("\n");
   delay(10000);
-
-  
 }
 
 

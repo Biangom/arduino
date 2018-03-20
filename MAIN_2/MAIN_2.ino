@@ -1,4 +1,3 @@
- 
 #include <SoftwareSerial.h>
 #include <TinyGPS.h>
  
@@ -24,13 +23,25 @@ void getgps(TinyGPS &gps);
 // terminal program an another serial port (NewSoftSerial()) for your 
 // GPS.
 
-// -- Add part
-SoftwareSerial BTSerial(2, 3);
-byte buffer[1024]; // 데이터를 수신 받을 버퍼
+// ADD PART
+float latitude, longitude;
+
+SoftwareSerial BTSerial(2, 3); // SoftwareSerial(RX, TX)
+byte buffer[512]; // 데이터를 수신 받을 버퍼
 int bufferPosition; // 버퍼에 데이타를 저장할 때 기록할 위치
+
+byte _buffer[512]; // 임시 버퍼
+int _pos; // 임시 버퍼 포지션
+
+double one = 34.76633;
+double two = 127.28124;
 
 void setup()
 {
+  // ADD PART
+  BTSerial.begin(9600);
+  
+  
   // This is the serial rate for your terminal program. It must be this 
   // fast because we need to print everything before a new sentence 
   // comes in. If you slow it down, the messages might not be valid and 
@@ -43,10 +54,6 @@ void setup()
   Serial.println("GPS Shield QuickStart Example Sketch v12");
   Serial.println("       ...waiting for lock...           ");
   Serial.println("");
-
-  // -- Add part
-  BTSerial.begin(9600);
-  bufferPosition = 0; // 버퍼 위치 초기화
 }
  
 // This is the main loop of the code. All it does is check for data on 
@@ -62,7 +69,11 @@ void loop()
         getgps(gps);         // then grab the data.
       }   
   }
-  //Serial.write('1');
+  
+  BTSerial.print(latitude);
+  BTSerial.print(",");
+  BTSerial.print(e3");
+  delay(1000);
 }
  
 // The getgps function will get and print the values we want.
@@ -74,7 +85,7 @@ void getgps(TinyGPS &gps)
   // the TinyGPS and NewSoftSerial libs.
   
   // Define the variables that will be used
-  float latitude, longitude;
+  
   // Then call this function
   gps.f_get_position(&latitude, &longitude);
   // You can now print variables latitude and longitude
@@ -111,8 +122,6 @@ void getgps(TinyGPS &gps)
   //Serial.print("Failed Checksums: ");Serial.print(failed_checksum);
   //Serial.println(); Serial.println();
   delay(10000);
-
-  
 }
 
 
