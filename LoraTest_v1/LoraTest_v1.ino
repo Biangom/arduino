@@ -1,11 +1,11 @@
 #include <SoftwareSerial.h>
  
-SoftwareSerial mySerial(3, 2); // RX, TX
+SoftwareSerial mySerial(2, 3); // RX, TX
  
 void setup()  
 {
   // Open serial communications and wait for port to open:
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.println("Goodnight moon!");
  
   // set the data rate for the SoftwareSerial port
