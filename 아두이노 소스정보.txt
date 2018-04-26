@@ -1,7 +1,31 @@
-TESTBLUE_2 코드만 재호한테 보내지는게 됨
-MAIN 좌표값 보내는거 완료
-MAIIN_3 좌표를 블루투스로 보내는거 완료
+TESTBLUE_2
+코드만 재호한테 보내지는게 됨
 
-OpenHouse_Recent 폴더안에 소스있음 오픈하우스 4월 6일 가기전 소스코드 (재호가 짜서 체크까지 다한거, 시리얼로 좌표 더미데이터 일정시간 보내기)
+MAIN
+좌표값 보내는거 완료
 
-0418LoRaTest Lora설정값 변경 테스트 완료
+MAIIN_3
+좌표를 블루투스로 보내는거 완료
+
+OpenHouse_Recent
+폴더안에 소스있음 오픈하우스 4월 6일 가기전 소스코드 (재호가 짜서 체크까지 다한거, 시리얼로 좌표 더미데이터 일정시간 보내기)
+
+0418LoRaTest Lora
+설정값 변경 테스트 완료
+
+LoraTest_0420
+- 디버깅 메세지 리셋, 데이터보내기 보내는 거 완료
+- 디버깅 로그 시리얼 모니터에 출력하는거 완료
+
+
+LoraTest_GPS
+재호가 구현판 파일, 깃허브에서 주기적으로 업데이트 하고 있는 파일
+
+0426switch_5v_test
+This file is a red smaill switch test file
+
+GpsSwitch
+include Switch, This is Gps working
+
+GpsOriginal
+not include Switch, This is Gps Working(basic)
