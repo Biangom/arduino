@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+#include<TimerOne.h>
 #include <TinyGPS.h>
 /*
 #define RXPIN 6
@@ -28,6 +28,10 @@ void setup()
    Serial1.begin(19200);
   Serial2.begin(9600);
  
+
+  Timer1.initialize(1000000000); // 10초
+  Timer1.attachInterrupt(checkgps);
+
   
  
   Serial.println("Connection Start");
@@ -88,9 +92,9 @@ void transmission(){
     dtostrf(latitude,7,5,lat);
     dtostrf(longitude,7,5,lon);
   
-  Serial.print(lat);
+  Serial.print(latitude);
   Serial.print(',');
-  Serial.println(lon);
+  Serial.println(longitude);
 //  }
 //  else{
 //    Serial.print('F');
@@ -245,7 +249,6 @@ void set_appkey(){
 void checkgps(){
   while(Serial2.available()){
     int c = Serial2.read();    // load the data into a variable...
-    Serial.println(c);
     if(gps.encode(c))      // if there is a new valid sentence...
     {
       Serial.print('e');
