@@ -247,6 +247,7 @@ void set_appkey(){
 // GPS값 정상적으로 받아왔는지 확인
 // 정상이면 true, 아니면 false
 void checkgps(){
+  Serial.print("10s");
   while(Serial2.available()){
     int c = Serial2.read();    // load the data into a variable...
     if(gps.encode(c))      // if there is a new valid sentence...
