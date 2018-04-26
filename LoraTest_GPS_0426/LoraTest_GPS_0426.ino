@@ -1,14 +1,6 @@
 #include<TimerOne.h>
 #include <TinyGPS.h>
-/*
-#define RXPIN 6
-#define TXPIN 5
-#define GPSBAUD 9600
 
-
-SoftwareSerial Serial1(2,3); // RX, TX
-SoftwareSerial Serial2(RXPIN, TXPIN);
-*/
 TinyGPS gps;
 unsigned short lrw[4] = {0x4C, 0x52, 0x57, 0x20};
 unsigned short cid[2]={0};
@@ -24,17 +16,13 @@ float f_lat = 0.0, f_lon = 0.0;
 void getgps(TinyGPS &gps); 
 void setup()  
 {
-
   Serial.begin(19200);
-   Serial1.begin(19200);
+  Serial1.begin(19200);
   Serial2.begin(9600);
  
-
   Timer1.initialize(500000000); // 10초
   Timer1.attachInterrupt(checkplus);
 
-  
- 
   Serial.println("Connection Start");
   reset();
  }
@@ -52,8 +40,7 @@ void loop() // run over and over
     }
     Serial.println(line);
   }
-  
-  //checkgps();
+ 
   if(Serial.available()){
    
     switch(Serial.read()){
@@ -245,8 +232,6 @@ void checkgps(){
       Serial.println(line2);
       s_lat = line2.substring(7,17);
       s_lon = line2.substring(20,31);
-//      Serial.println(s_lat);
-//      Serial.println(s_lon);
       if(s_lat.charAt(0) != '3'){
         f_lat = -1;
         f_lon = -1;
@@ -254,17 +239,14 @@ void checkgps(){
       }
        else{
            f_lat = s_lat.toFloat();
-          f_lon = s_lon.toFloat();
+           f_lon = s_lon.toFloat();
            f_lat /= 100;
-          f_lon /= 100;
-          return;
-       }
-      
-     }
-     
+           f_lon /= 100;
+           return;
+       } 
+     } 
   }
 }
-
 void checkplus(){
   check = true;
 }
