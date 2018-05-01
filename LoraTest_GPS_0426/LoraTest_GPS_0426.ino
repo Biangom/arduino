@@ -1,5 +1,4 @@
 #include<TimerOne.h>
-#include <TinyGPS.h>
 
 TinyGPS gps;
 unsigned short lrw[4] = {0x4C, 0x52, 0x57, 0x20};
@@ -163,7 +162,7 @@ void reset(){
 // AppEUI Setting
 // LRW 33 0000000000000004(hexa) CR LF
 void set_appeui(){
-  command_Option(0x37,0x30,0x30,0x34);
+  //command_Option(0x37,0x30,0x30,0x34);
   int i = 0 ; 
   cid[0] = 0x33;
   cid[1] = 0x33;
@@ -225,18 +224,20 @@ void set_appkey(){
 // 정상이면 true, 아니면 false
 void checkgps(){
   String line2=" "; 
-  String s_lat, s_lon;
+  String s_lat, s_lon; // 좌표값을 저장할 문자열 변수
   while(1){
     line2 = Serial2.readStringUntil('\n');
     if(line2.startsWith("$GPGLL")){
       Serial.println(line2);
       s_lat = line2.substring(7,17);
       s_lon = line2.substring(20,31);
+      // 좌표값이 아니라면  
       if(s_lat.charAt(0) != '3'){
         f_lat = -1;
         f_lon = -1;
         return;
       }
+       // 정상적인 좌표값이라면
        else{
            f_lat = s_lat.toFloat();
            f_lon = s_lon.toFloat();
@@ -247,6 +248,7 @@ void checkgps(){
      } 
   }
 }
+
 void checkplus(){
   check = true;
 }
