@@ -58,7 +58,7 @@ void loop() // run over and over
     if((sk.b_buzzer){
       //tone(PIN, 1000); // 5옥타브 도
       sk.b_buzzer = false;
-  }*/
+  }
   /*
   //스위치
   if(digitalRead(pin) == HIGH){
