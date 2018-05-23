@@ -1,6 +1,17 @@
 #include "Arduino.h"
 #include "SkLoRa.h"
 
+<<<<<<< HEAD
+=======
+// LoRa Reset
+// LRW 70 CR LF
+void SkLoRa::reset()
+{
+	command(0x37,0x30);
+	b_join = false;
+	delay(100);
+}
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 
 // Class Type Setting
 // LRW 4B 2 ( C TYpe )
@@ -73,6 +84,7 @@ void SkLoRa::setLinkCheckRequest()
 	delay(100);
 }
 
+<<<<<<< HEAD
 // Debug Message On/Off
 // LRW 50 0 / 1 ( 0 : Off, 1 : On )
 void SkLoRa::setDebugmode(bool mode)
@@ -80,6 +92,20 @@ void SkLoRa::setDebugmode(bool mode)
 	unsigned short option;
 	if(mode) option = 0x31;
 	else option = 0x30;
+=======
+// Serial connection Check
+// LRW 49
+void SkLoRa::check_connection()
+{
+	command(0x34,0x39);
+	delay(100);
+}
+
+// Debug Message On/Off
+// LRW 50 0 / 1 ( 0 : Off, 1 : On )
+void SkLoRa::setDebugmode(unsigned short option)
+{
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 	command(0x35,0x30,option);
 	delay(100);
 }
@@ -92,6 +118,7 @@ void SkLoRa::setTimeSyncRequest()
 }
 
 
+<<<<<<< HEAD
 // LoRa Reset
 // LRW 70 CR LF
 void SkLoRa::reset()
@@ -149,6 +176,8 @@ void SkLoRa::gpsParse()
 }
 
 
+=======
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 // Check Firmware Version
 // LRW 4F
 void SkLoRa::getVersion()
@@ -215,6 +244,7 @@ void SkLoRa::transmission_gps()
   for(i = 0 ; i < 3 ; i++) Serial1.write(crlf[i]);
 }
 
+<<<<<<< HEAD
 // Message 전송
 // LRW 31 Message cnt 1
 // Switch Message 전송
@@ -276,6 +306,47 @@ int SkLoRa::switchon(int b1){
 
 	return sensorValue;
 }
+=======
+// GPS Parse
+// GPS 모듈이 준 데이터 중 위도,경도 값만 Parsing
+void SkLoRa::gpsParse()
+{
+  String g_line=" ";  // Gps에서 받아들인 데이터를 저장할 String 변수
+  String s_lat, s_lon; // 좌표값을 저장할 문자열 변수
+  //initlatlon();
+  while(1){
+	// 개행을 기준으로 한줄씩 저장   
+    g_line = Serial2.readStringUntil('\n');
+	
+	//GPGLL로 시작하는 단어인가? ( GPS 모듈이 보내는 데이터 중 위도,경도 좌표값은 $GPGLL에 있음 )
+    if(g_line.startsWith("$GPGLL")){
+      //Serial.println(g_line);
+      //위도, 경도값을 s_lat, s_lon에 저장 
+	  s_lat = g_line.substring(7,17);
+      s_lon = g_line.substring(20,31);
+      
+	  // GPS에서 정상적으로 좌표값이 출력되지 않으면
+      if(s_lat.charAt(0) != '3'){
+        //f_lat, f_lon에 음수값 저장 
+		f_lat = -1;
+        f_lon = -1;
+        return;
+      }
+       // 정상적인 좌표값이라면
+	   // f_lat, f_lot에 좌표값 저장 후 자리수 조정
+      else{
+          f_lat = s_lat.toFloat();
+          f_lon = s_lon.toFloat();
+          f_lat /= 100;
+          f_lon /= 100;
+          return;
+       } 
+     } 
+  }
+}
+
+
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 // Command 입력 기본 형식 
 // CID = CID1, CID2, Option은 최대 4개까지 ( default = 0 )
 void SkLoRa::command(unsigned short CID1, unsigned short CID2, unsigned short option1 = 0, unsigned short option2 = 0, unsigned short option3 = 0, unsigned short option4 = 0, unsigned short option5 = 0)
