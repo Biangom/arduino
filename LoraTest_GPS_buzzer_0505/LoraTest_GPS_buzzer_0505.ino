@@ -9,7 +9,7 @@ void setup()
   Serial1.begin(19200); // Arduino - LoRa Module
   Serial2.begin(9600);  // Arduino - GPS Module
  
-  Timer1.initialize(1000000000); // 10초
+  Timer1.initialize(6000000000); // 10초
   Timer1.attachInterrupt(gps_interrupt);
   
   Serial.println("Connection Start");
@@ -25,7 +25,7 @@ void loop() // run over and over
     line = Serial1.readStringUntil('\n');
     //DevReset 시 Reset
     if(line.startsWith("DevReset")){
-      delay(5000);
+      delay(10000);
       sk.reset();
     }
     //Join 완료 시
