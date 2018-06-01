@@ -20,11 +20,22 @@ class SkLoRa
 									   0x30, 0x30, 0x31, 0x31, 0x30, 0x33, 0x63, 0x32, 
 									   0x36, 0x36, 0x35, 0x66, 0x31, 0x39, 0x65, 0x37};  // AppKey
 		float f_lat, f_lon;			// 좌표값을 저장할 float 형 변수
+<<<<<<< HEAD
+		int sw_count;
+		bool b_join, b_buzzer, b_debug;      // join 완료시 True
+=======
 		bool b_join;				// join 완료시 True
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 	
 	public :
 		SkLoRa(){
 			b_join = false;
+<<<<<<< HEAD
+			b_buzzer = false;
+			b_debug = false;
+			sw_count = 0;
+=======
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 			f_lat = 0;
 			f_lon = 0;
 		}
@@ -36,6 +47,20 @@ class SkLoRa
 		void setappkey();								// Application Key Setting
 		void setappeui();								// App EUI Setting
 		void setLinkCheckRequest(); 					// Link Check Request
+<<<<<<< HEAD
+		void setDebugmode(bool mode);					// Set Debug Message On/Off
+		void setTimeSyncRequest();  					// Time Sync Request
+		void check_connection();						// Check Connection
+		void reset();									// Reset
+		void transmission_gps();						// GPS Message Transmission ( GPS Latitude, longitude )
+		void transmission_switch();						// Switch Message Transmission
+		void gpsParse();								// Gps Parse 
+		void getVersion();								// Get Firmware Version
+		void buzzer(int b1, int b2);					// Activate Buzzer
+		int switchon(int b1);
+		void command(unsigned short CID1, unsigned short CID2, unsigned short option1 = 0, 
+					 unsigned short option2 = 0, unsigned short option3 = 0, unsigned short option4 = 0, unsigned short option5 = 0); // Standard Command Form
+=======
 		void setDebugmode(unsigned short option);		// Set Debug Message On/Off
 		void setTimeSyncRequest();  					// Time Sync Request
 		void check_connection();						// Check Connection
@@ -44,6 +69,7 @@ class SkLoRa
 		void gpsParse();								// Gps Parse 
 		void getVersion();								// Get Firmware Version
 		void command(unsigned short CID1, unsigned short CID2, unsigned short option1 = 0, unsigned short option2 = 0, unsigned short option3 = 0, unsigned short option4 = 0, unsigned short option5 = 0); // Standard Command Form
+>>>>>>> 6c79bda30c22ac236ff7c3a7abd7310621b6d745
 };
 
 #endif

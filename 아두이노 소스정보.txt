@@ -35,8 +35,6 @@ LoraTest_GPS_0426
 2. 5초에 한번씩 transmission 함수 실행
 3. GPS 파싱을 통한 좌표값 출력 성공
 
-LoraTest_GPS_buzzer_0505
-1. 
 
 Both NL & CR
 -> 개행 포함해서 전송 이걸로 해줘야 전송이 잘됨
