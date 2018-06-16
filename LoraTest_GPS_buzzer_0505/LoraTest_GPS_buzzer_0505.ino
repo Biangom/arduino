@@ -27,7 +27,7 @@ void loop() // run over and over
     line = Serial1.readStringUntil('\n');
     //DevReset 시 Reset
     if(line.startsWith("DevReset")){
-      delay(5000);
+      delay(10000);
       sk.reset();
     }
     //Join 완료 시
