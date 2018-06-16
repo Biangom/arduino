@@ -19,7 +19,7 @@ void setup()
   
   Serial.println("Connection Start");
   //delay(1000);
-  for(int i = 0 ; i < 50; i++) cmd[i] = '\0';
+  init_cmd();
   sk.reset();
  }
  
@@ -58,18 +58,24 @@ void loop() // run over and over
     }
     else if(user_cmd == '='){
       sk.setTimeSyncRequest();
-     
     }/*
     else if(user_cmd == 'k'){
       sk.transmission_switch();
     }
     */
-    else if(user_cmd != '\n'){
-      for(int i = 0 ; i < 50; i++){
-        if(cmd[i] != '\0'
-        Serial1.write(cmd[i]);
+    else if(user_cmd == '\n'){
+      Serial.print("I Entered n\n");
+      short crlf[2] = {0x0D,0x0A};
+      if(cmd[0] != '\0') {
+        for(int i = 0 ; i < 50; i++){
+          Serial1.write(cmd[i]);
+          if(cmd[i] == '\0') {
+            for(int j = 0 ; j<2; j++) Serial1.write(crlf[j]);
+            init_cmd(); 
+            break;
+          }
+        }  
       }
-        
     }
     else {
        cmd[cmd_cnt] = user_cmd;
@@ -110,6 +116,9 @@ void gps_interrupt(){
   count = 0;
 }
 
+void init_cmd(){
+   for(int i = 0 ; i < 50; i++) cmd[i] = '\0';
+}
 
 
 
