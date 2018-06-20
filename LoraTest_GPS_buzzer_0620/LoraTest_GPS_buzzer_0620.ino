@@ -4,13 +4,13 @@
 SkLoRa sk; // Sk 라이브러리
 bool b_switch = false; 
 bool b_up = false; // UpConfirmed인 경우
-//int sw_count = 0; 
 int cmd_cnt  = 0; // cmd 배열의 index
 int send_cnt = 0; 
 int second = 0;
 int gps_second = 0;
 int send_second = 0;
 bool resend_check = false; // 다시 전송했는지 check
+bool confirmed[3] = {false,false,false};
 char cmd[100];
 
 void setup()  
@@ -20,7 +20,7 @@ void setup()
   Serial2.begin(9600);  // Arduino - GPS Module
  
   Timer1.initialize(1000000000); // 10초 
-  Timer1.attachInterrupt(interr);
+  Timer1.attachInterrupt(interrupt);
   
   Serial.println("Connection Start");
   //delay(1000);
@@ -40,6 +40,7 @@ void loop() // run over and over
     //DevReset 시 Reset
     if(line.startsWith("DevReset")){
       delay(10000); //10s delay
+      init_val();
       sk.reset();
     }
     //Join 완료 시
@@ -48,8 +49,9 @@ void loop() // run over and over
     }
     
     //Confirmed_UP 메세지 수신시 ( 메세지 처음 전송 시 )
-    if(line.indexOf("CONFIRMED_UP") != -1){
-      b_up = true;
+    if(line.indexOf("DATA_CONFIRMED_UP") != -1){
+      //b_up = true;
+      confirmed[0] = true;
     }
 
     //Transmission 이후 BUSY라고 뜰때 ( 전송 안댐 )
@@ -59,26 +61,30 @@ void loop() // run over and over
     }
     
     //Confirmed_up 이후 데이터가 재전송 중일 때
-    if(b_up){
+   if(confirmed[0]){
       // UNCONFIRMED_DOWN 메세지 수신시 ( Confirmed_up에 대한 ACK )
-      if(line.indexOf("UNCONFIRMED_DOWN") != -1){
+      // CONFIRMED_DOWN 메세지 수신시 ( Confirmed_up에 대한 ACK 또는 서버로부터 메세지 전송  )
+      if(line.indexOf("UNCONFIRMED_DOWN") != -1 || line.indexOf("DATA_CONFIRMED_DOWN") != -1){
+        //confirmed[1] = true;
         gps_second = second; //60초 타이머
         resend_check = false;
-        b_up = false; // 재전송 끝
+        confirmed[0] = false; // 재전송 끝
         send_cnt = 0;
       }
       
       //SEND 한 경우 ( 재전송일 때 - 최초 전송 포함 )
-      if(line.indexOf("SEND") != -1 && b_up) send_cnt++;
+      if(line.indexOf("SEND") != -1) send_cnt++;
 
       //재전송을 8번 했을 때 
       if(send_cnt == 8){
         gps_second = second; //60초 타이머
         resend_check = false;
-        b_up = false; //재전송 끝
+        confirmed[0]= false; //재전송 끝
+        //confirmed[1] = false;
         send_cnt = 0;
       }
     }
+    
     
    /*
     //Emergency 신호 수신 시 ( 16진수값 )
@@ -87,13 +93,14 @@ void loop() // run over and over
     }*/
     //LoRa 로그 출력
     Serial.println(line);
+    /*
     if(send_cnt != 0){
       Serial.print("Send_cnt : " );
       Serial.println(send_cnt);
     }
     Serial.print("b_up : " );
-      Serial.println(b_up);
-    
+      Serial.println(confirmed[0]);
+    */
     }
   
  
@@ -155,8 +162,8 @@ void loop() // run over and over
   }
 
    // 60초 && Join되어있을 경우만
-   if( second - gps_second >= 60 && resend_check == false && sk.b_join){
-     //sk.transmission_gps();
+   if( second - gps_second >= 70 && resend_check == false && sk.b_join){
+     sk.transmission_gps();
       resend_check = true;    
   }
 }
@@ -164,7 +171,7 @@ void loop() // run over and over
 
 
 // 60초 카운트를 위한 함수 
-void interr(){
+void interrupt(){
   second += 10;
 }
 
@@ -172,6 +179,17 @@ void interr(){
 void init_cmd(){
    for(int i = 0 ; i < 50; i++) cmd[i] = '\0';
    cmd_cnt = 0;//cmd 배열의 Index
+}
+
+void init_val(){
+  b_switch = false; 
+  b_up = false; 
+  send_cnt = 0; 
+  second = 0;
+  gps_second = 0;
+  send_second = 0;
+  resend_check = false; 
+  confirmed[0] = false;
 }
 
 
