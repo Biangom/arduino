@@ -182,12 +182,12 @@ void SkLoRa::transmission_gps()
 	
   gpsParse(); // f_lat, f_lon에 좌표값 저장
 
-  /*
+  
   // Gps값 정상 출력 Test Code
   Serial.print(f_lat,5);
   Serial.print(',');
   Serial.println(f_lon,5);
- */
+ 
  
   //LRW 입력
   for(i = 0 ; i < 4 ; i++) Serial1.write(lrw[i]);
@@ -204,9 +204,6 @@ void SkLoRa::transmission_gps()
   Serial1.print(',');
   Serial1.print(f_lon,5);
   
-  // space
-  Serial1.write(crlf[0]);
-
   // Option 입력
   for(i = 0 ; i < 5 ; i++) Serial1.write(option[i]);
 
@@ -284,13 +281,11 @@ void SkLoRa::transmission_test(char dummy)
 	  tran_check = true;
   }
   else{
-	  for( i = 0 ; i < 70 ; i++) arr[i] = dummy;
+	  for( i = 0 ; i < 70 ; i++) arr2[i] = dummy;
   }
   
-  if(sizeof(arr2)>=66){
-	  Serial.println("\nError:Size is Over\n");
-	  return;
-  }
+  
+  
   //CID
   cid[0] = 0x33;
   cid[1] = 0x31;
@@ -316,7 +311,7 @@ void SkLoRa::transmission_test(char dummy)
   // 메세지 입력
   // 위도,경도 -> 전송 형식, 추후 스위치 같은 경우는 T/F위도,경도
   if(tran_check) for(i = 0 ; i < 65 ; i++) Serial1.write(arr[i]);
-  else for(i = 0 ; i < 80 ; i++) Serial1.write(arr[i]);
+  else for(i = 0 ; i < 70 ; i++) Serial1.write(arr2[i]);
  
 
   // Option 입력
@@ -324,9 +319,6 @@ void SkLoRa::transmission_test(char dummy)
 
   // 1
   Serial1.write(cid[1]);
-   
-  // space
-  Serial1.write(crlf[0]);
   
   //CRLF 입력
   for(i = 0 ; i < 3 ; i++) Serial1.write(crlf[i]);
