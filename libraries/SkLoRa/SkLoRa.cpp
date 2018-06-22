@@ -275,16 +275,19 @@ void SkLoRa::transmission_test(char dummy)
   int i = 0 ; 
   bool tran_check = false;
   unsigned short option[5];
-  char arr[65],arr2[70];
+  char arr[70];
+  for(i = 0 ; i< 70 ; i++) arr[i] = 0;
   if( dummy == 'a'){
 	  for( i = 0 ; i < 65 ; i++) arr[i] = dummy;
-	  tran_check = true;
   }
   else{
-	  for( i = 0 ; i < 70 ; i++) arr2[i] = dummy;
+	  for( i = 0 ; i < 70 ; i++) arr[i] = dummy;
   }
   
-  
+	if(arr[65] != 0) {
+		Serial.println("Size is Over!");
+		return;
+	}
   
   //CID
   cid[0] = 0x33;
@@ -308,12 +311,10 @@ void SkLoRa::transmission_test(char dummy)
   // space
   Serial1.write(crlf[0]);
 
-  // 메세지 입력
-  // 위도,경도 -> 전송 형식, 추후 스위치 같은 경우는 T/F위도,경도
-  if(tran_check) for(i = 0 ; i < 65 ; i++) Serial1.write(arr[i]);
-  else for(i = 0 ; i < 70 ; i++) Serial1.write(arr2[i]);
  
+ for(i = 0 ; i < 65 ; i++) Serial1.write(arr[i]); 
 
+ 
   // Option 입력
   for(i = 0 ; i < 5 ; i++) Serial1.write(option[i]);
 
