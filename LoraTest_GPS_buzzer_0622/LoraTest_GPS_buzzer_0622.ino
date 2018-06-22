@@ -3,6 +3,7 @@
 
 #define PERIOD 75
 #define DELAY_SEC 10000
+#define RESET_SEC 13
 
 SkLoRa sk; // Sk 라이브러리
 bool b_switch = false; 
@@ -15,6 +16,9 @@ int send_second = 0;
 bool resend_check = false; // 다시 전송했는지 check
 bool confirmed[3] = {false,false,false};
 char cmd[100];
+
+bool isReset = false;
+int reset_second = 0;
 
 void setup()  
 {
@@ -44,9 +48,9 @@ void loop() // run over and over
         
         //DevReset 시 Reset
         if(line.startsWith("DevReset")){
-            delay(DELAY_SEC); //10s delay
-            init_val();
-            sk.reset();
+            isReset = true;
+            reset_second = second;
+            //delay(DELAY_SEC); //10s delay
         }
 
         //Join 완료 시
@@ -101,9 +105,11 @@ void loop() // run over and over
     }*/
     
     
-        //LoRa 로그 출력
+        //LoRa 디버그 메세지 로그 출력
         Serial.println(line);
-    
+
+        // 변수 체크용
+        /*
         if(send_cnt != 0){
             Serial.print("Send_cnt : " );
             Serial.println(send_cnt);
@@ -111,7 +117,7 @@ void loop() // run over and over
         if(confirmed[0]){
             Serial.print("b_up : " );
             Serial.println(confirmed[0]);
-        }
+        }*/
     }
  
      if(Serial.available()){
@@ -172,9 +178,16 @@ void loop() // run over and over
     }
 
    // 60초 && Join되어있을 경우만
-   if( second - gps_second >= PERIOD && resend_check == false && sk.b_join){
+     if( second - gps_second >= PERIOD && resend_check == false && sk.b_join){
           sk.transmission_gps();
           resend_check = true;    
+    }
+
+    // DevReset 메세지 받고 일정시간 지났을 떄 Reset
+    if( second - reset_second >= RESET_SEC && isReset == true) {
+        sk.reset();
+        init_val();
+        isReset = false;
     }
 }
 
