@@ -1,7 +1,7 @@
 #include "SkLoRa.h"
 #include <TimerOne.h>
 
-#define PERIOD 75
+#define PERIOD 78
 #define DELAY_SEC 10000
 #define RESET_SEC 13
 
@@ -16,6 +16,7 @@ int send_second = 0;
 bool resend_check = false; // 다시 전송했는지 check
 bool confirmed[3] = {false,false,false};
 char cmd[100];
+int abnormal_second = 0;
 
 bool isReset = false;
 int reset_second = 0;
@@ -83,12 +84,15 @@ void loop() // run over and over
                 confirmed[0] = false; // 재전송 끝
                 send_cnt = 0;
             }
+           
       
             //SEND 한 경우 ( 재전송일 때 - 최초 전송 포함 )
             if(line.indexOf("SEND") != -1) send_cnt++;
-
+             if( send_cnt > 0 ){
+                 abnormal_second = second;
+            }
             //재전송을 8번 했을 때 
-            if(send_cnt == 8){
+            if(send_cnt >= 6){
                 gps_second = second; //60초 타이머
                 resend_check = false;
                 confirmed[0]= false; //재전송 끝
@@ -97,7 +101,7 @@ void loop() // run over and over
             }
         }
     
-    
+   
    /*
     //Emergency 신호 수신 시 ( 16진수값 )
     if(line.startsWith("TotalTxTime")){
@@ -114,6 +118,7 @@ void loop() // run over and over
             Serial.print("Send_cnt : " );
             Serial.println(send_cnt);
         }
+        
         if(confirmed[0]){
             Serial.print("b_up : " );
             Serial.println(confirmed[0]);
@@ -178,8 +183,8 @@ void loop() // run over and over
     }
 
    // 60초 && Join되어있을 경우만
-     if( second - gps_second >= PERIOD && resend_check == false && sk.b_join){
-          sk.transmission_gps();
+    if( second - gps_second >= PERIOD && resend_check == false && sk.b_join){
+          sk.transmission_dummy();
           resend_check = true;    
     }
 
